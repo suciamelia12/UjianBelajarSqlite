@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         EditText edNoHp = (EditText) findViewById(R.id.edNoHp);
         Button btnSimpan = (Button) findViewById(R.id.btnSimpan);
 
-        mhsList = new ArrayList<>();
+        mhsList = new ArrayList<MhsModel>();
 
         isEdit = false;
 
@@ -59,33 +59,38 @@ public class MainActivity extends AppCompatActivity {
 
                 if (isian_nama.isEmpty() || isian_nim.isEmpty() || isian_noHp.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "isian masih kosong", Toast.LENGTH_SHORT).show();
-                }else{
+                }else {
 
                     // mhsList.add(new MhsModel(-1, isian_nama, isian_nim, isian_noHp));
 
 
-                    boolean stts ;
-
-                    if(!isEdit){
-                        mm = new MhsModel(-1, isian_nama, isian_nim, isian_noHp);
-                        stts = db.simpan(mm);
-
-                        edNama.setText("");
-                        edNim.setText("");
-                        edNoHp.setText("");
-
-                    }else{
-                        mm = new MhsModel(mm.getId(), isian_nama, isian_nim, isian_noHp);
-                        stts = db.ubah(mm);
-                    }
-
-                    if (stts) {
-                        Toast.makeText(getApplicationContext(), "Data berhasil disimpan", Toast.LENGTH_SHORT).show();
+                    boolean stts;
+                    mhsList = db.list();
+                    if (mhsList.size() >= 5) {
+                        Toast.makeText(getApplicationContext(), "Kelebihan Data", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(getApplicationContext(), "Data gagal disimpan", Toast.LENGTH_SHORT).show();
-                    }
 
-                    // intent_List.putParcelableArrayListExtra("mhsList", mhsList);
+                        if (!isEdit) {
+                            mm = new MhsModel(-1, isian_nama, isian_nim, isian_noHp);
+                            stts = db.simpan(mm);
+
+                            edNama.setText("");
+                            edNim.setText("");
+                            edNoHp.setText("");
+
+                        } else {
+                            mm = new MhsModel(mm.getId(), isian_nama, isian_nim, isian_noHp);
+                            stts = db.ubah(mm);
+                        }
+
+                        if (stts) {
+                            Toast.makeText(getApplicationContext(), "Data berhasil disimpan", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Data gagal disimpan", Toast.LENGTH_SHORT).show();
+                        }
+
+                        // intent_List.putParcelableArrayListExtra("mhsList", mhsList);
+                    }
                 }
             }
         });
